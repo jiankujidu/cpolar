@@ -4,14 +4,12 @@
 # 建议定时10分钟：*/10 * * * *
 
 '''
+cron： */10 * * * * *
+new Env（'钉钉内网穿透'）;
 使用说明：
 1、打开https://www.cpolar.com/注册登录后获取authtoken；
 2、新增变量qlnwct_authtoken，值为你账户的authtoken，运行脚本
-'''
-'''
-cron： */10 * * * * *
-new Env（'钉钉内网穿透'）;
-'''
+''' 
 
 import os
 import re
