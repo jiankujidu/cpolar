@@ -41,7 +41,7 @@ def update():
 # 下载主程序
 def download_cpolar():
     if not os.path.exists("cpolar.py"):
-        res = requests.get("https://ghproxy.com/https://raw.githubusercontent.com/jiankujidu/cpolar/mainr/cpolar.py")
+        res = requests.get("https://ghproxy.com/https://raw.githubusercontent.com/jiankujidu/cpolar/main/cpolar.py")
         with open("cpolar.py", "wb") as f:
             f.write(res.content)
     if not os.path.exists("cpolar"):
