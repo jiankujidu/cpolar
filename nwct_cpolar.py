@@ -116,7 +116,7 @@ def start_nwct():
         sleep(10)
         if process_daemon():
             if load_send():
-                print("启动内网穿透成功！\n青龙面板：%s" % qlurl)
+                print("启动内网穿透成功！\n公众号:一起瞎折腾\n青龙面板：%s" % qlurl)
                 send("内网穿透通知", "青龙面板访问地址：" + qlurl)
         else:
             print("启动内网穿透失败...")
