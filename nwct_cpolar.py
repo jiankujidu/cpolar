@@ -1,22 +1,28 @@
 # -*- coding: UTF-8 -*-
-# Version: v1.1
+# Version: v1.3
 # Created by lstcml on 2022/07/21
 # 建议定时10分钟：*/10 * * * *
 
 '''
 使用说明：
-1、https://i.cpolar.com/m/4LUd/注册登录后获取authtoken；
+1、打开https://i.cpolar.com/m/4LUd/注册登录后获取authtoken；
 2、新增变量qlnwct_authtoken，值为你账户的authtoken，运行脚本
 
 更新记录：
-V1.1
-1、开放推送，仅支持PushPlus推送，每次触发启动穿透会推送一次地址
+v1.3
+1、移动仓库目录；
+
+v1.2
+1、新增CPU架构识别，自动下载对应cpolar程序；
+2、默认开启自动更新，qlnwctupdate值为false则关闭自动更新；
+
+v1.1
+1、开放推送，仅支持PushPlus推送，每次触发启动穿透会推送一次地址；
 '''
 '''
 cron： */10 * * * * *
 new Env（'cpolar内网穿透'）;
 '''
-
 import os
 import re
 import sys
@@ -30,28 +36,41 @@ log_file = os.path.join(log_path, "cpolar.master.log")
 app_path = os.path.join(path, "cpolar")
 commond = "python3 " + os.path.join(path, "cpolar.py") + " &"
 
+# 检查更新
 def update():
     print("当前运行的脚本版本：" + str(version))
     try:
-        r1 = requests.get("https://gitee.com/lstcml/qinglongscripts/raw/master/nwct_cpolar.py").text
+        r1 = requests.get("https://raw.githubusercontent.com/jiankujidu/cpolar/main/nwct_cpolar.py").text
         r2 = re.findall(re.compile("version = \d.\d"), r1)[0].split("=")[1].strip()
         if float(r2) > version:
             print("发现新版本：" + r2)
             print("正在自动更新脚本...")
             os.system("killall cpolar")
-            os.system("ql raw https://gitee.com/lstcml/qinglongscripts/raw/master/nwct_cpolar.py &")
+            os.system("ql raw https://raw.githubusercontent.com/jiankujidu/cpolar/main/nwct_cpolar.py &")
     except:
         pass
 
+# 判断CPU架构
+def check_os():
+    r = os.popen('uname -m').read()
+    if 'aarch64' in r or 'arm' in r:
+        cpu = 'arm'
+    elif 'x86_64' in r or 'x64' in r:
+        cpu = 'amd64'
+    else:
+        print('穿透失败：不支持当前架构！')
+        return
+    print('获取CPU架构：' + r.replace('\n', ''))
+    download_cpolar(cpu)
 
 # 下载主程序
-def download_cpolar():
+def download_cpolar(cpu):
     if not os.path.exists("cpolar.py"):
-        res = requests.get("https://gitee.com/lstcml/qinglongscripts/raw/master/cpolar.py")
+        res = requests.get("https://raw.githubusercontent.com/jiankujidu/cpolar/main/cpolar.py")
         with open("cpolar.py", "wb") as f:
             f.write(res.content)
     if not os.path.exists("cpolar"):
-        res = requests.get("https://static.cpolar.com/downloads/releases/3.2.88.2/cpolar-stable-linux-arm.zip")
+        res = requests.get("https://static.cpolar.com/downloads/releases/3.2.88.2/cpolar-stable-linux-" + cpu + ".zip")
         with open("cpolar.zip", "wb") as f:
             f.write(res.content)
         os.system("unzip cpolar.zip >/dev/null 2>&1&&rm -f cpolar.zip&&chmod +x cpolar&&" + app_path + " authtoken  " + authtoken + ">/dev/null 2>&1")
@@ -69,11 +88,11 @@ def get_url():
                 return i.replace('\\', '')
                 break
     except:
-        return "https://gitee.com/lstcml/qinglongscripts"
+        return "https://github.com/jiankujidu/cpolar"
 
 # 进程守护
 def process_daemon():
-    print("公众号：一起瞎折腾\nQQ交流群:641307462\n正在检测穿透状态...")
+    print("正在检测穿透状态...")
     global qlurl
     qlurl = get_url()
     try:
@@ -112,7 +131,7 @@ def load_send():
     sys.path.append(cur_path)
     sendNotifPath = cur_path + "/sendNotify.py"
     if not os.path.exists(sendNotifPath):
-        res = requests.get("https://gitee.com/lstcml/qinglongscripts/raw/master/sendNotify.py")
+        res = requests.get("https://github.com/jiankujidu/cpolar/raw/master/sendNotify.py")
         with open(sendNotifPath, "wb") as f:
             f.write(res.content)
 
@@ -125,7 +144,7 @@ def load_send():
 
 
 if __name__ == '__main__':
-    version = 1.1
+    version = 1.3
     try:
         authtoken = os.environ['qlnwct_authtoken']
     except:
@@ -137,13 +156,13 @@ if __name__ == '__main__':
     try:
         check_update = os.environ['qlnwctupdate']
     except:
-        check_update = ""
+        check_update = "true"
 
-    if check_update == "true":
+    if check_update != "false":
         update()
     else:
         print("变量qlnwctupdate未设置，脚本自动更新未开启！")
     if len(authtoken ) < 1:
         print("请新增变量qlnwct_authtoken！")
     else:
-        download_cpolar()
+        check_os()
