@@ -1,7 +1,12 @@
 # -*- coding: UTF-8 -*-
 # Version: v1.3
-# Created by lstcml on 2022/07/21
-# 建议定时10分钟：*/10 * * * *
+# Created by lstcml on 2022/08/18
+# 建议定时60分钟：*/10 * * * *
+
+'''
+cron: */10 * * * *
+new Env('Cpolar内网穿透');
+'''
 
 '''
 使用说明：
