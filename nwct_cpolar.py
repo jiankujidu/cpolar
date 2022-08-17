@@ -24,10 +24,6 @@ v1.2
 v1.1
 1、开放推送，仅支持PushPlus推送，每次触发启动穿透会推送一次地址；
 '''
-'''
-cron： */10 * * * * *
-new Env（'cpolar内网穿透'）;
-'''
 import os
 import re
 import sys
