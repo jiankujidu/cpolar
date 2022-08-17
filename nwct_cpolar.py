@@ -121,7 +121,7 @@ def start_nwct():
         else:
             print("启动内网穿透失败...")
     else:
-        print("穿透程序已在运行...\n青龙面板：%s" % qlurl)
+        print("穿透程序已在运行...\n公众号:一起瞎折腾\n青龙面板：%s" % qlurl)
 
 
 # 推送
