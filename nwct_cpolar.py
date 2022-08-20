@@ -41,13 +41,13 @@ commond = "python3 " + os.path.join(path, "cpolar.py") + " &"
 def update():
     print("当前运行的脚本版本：" + str(version))
     try:
-        r1 = requests.get("https://raw.githubusercontent.com/jiankujidu/cpolar/main/nwct_cpolar.py").text
+        r1 = requests.get("https://ghproxy.com/https://raw.githubusercontent.com/jiankujidu/cpolar/main/nwct_cpolar.py").text
         r2 = re.findall(re.compile("version = \d.\d"), r1)[0].split("=")[1].strip()
         if float(r2) > version:
             print("发现新版本：" + r2)
             print("正在自动更新脚本...")
             os.system("killall cpolar")
-            os.system("ql raw https://raw.githubusercontent.com/jiankujidu/cpolar/main/nwct_cpolar.py &")
+            os.system("ql raw https://ghproxy.com/https://raw.githubusercontent.com/jiankujidu/cpolar/main/nwct_cpolar.py &")
     except:
         pass
 
@@ -67,7 +67,7 @@ def check_os():
 # 下载主程序
 def download_cpolar(cpu):
     if not os.path.exists("cpolar.py"):
-        res = requests.get("https://raw.githubusercontent.com/jiankujidu/cpolar/main/cpolar.py")
+        res = requests.get("https://ghproxy.com/https://raw.githubusercontent.com/jiankujidu/cpolar/main/cpolar.py")
         with open("cpolar.py", "wb") as f:
             f.write(res.content)
     if not os.path.exists("cpolar"):
@@ -89,7 +89,7 @@ def get_url():
                 return i.replace('\\', '')
                 break
     except:
-        return "https://github.com/jiankujidu/cpolar"
+        return "https://ghproxy.com/https://github.com/jiankujidu/cpolar"
 
 # 进程守护
 def process_daemon():
@@ -132,7 +132,7 @@ def load_send():
     sys.path.append(cur_path)
     sendNotifPath = cur_path + "/sendNotify.py"
     if not os.path.exists(sendNotifPath):
-        res = requests.get("https://raw.githubusercontent.com/jiankujidu/cpolar/main/sendNotify.py")
+        res = requests.get("https://ghproxy.com/https://raw.githubusercontent.com/jiankujidu/cpolar/main/sendNotify.py")
         with open(sendNotifPath, "wb") as f:
             f.write(res.content)
 
