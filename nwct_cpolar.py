@@ -132,7 +132,7 @@ def load_send():
     sys.path.append(cur_path)
     sendNotifPath = cur_path + "/sendNotify.py"
     if not os.path.exists(sendNotifPath):
-        res = requests.get("https://github.com/jiankujidu/cpolar/raw/master/sendNotify.py")
+        res = requests.get("https://raw.githubusercontent.com/jiankujidu/cpolar/main/sendNotify.py")
         with open(sendNotifPath, "wb") as f:
             f.write(res.content)
 
