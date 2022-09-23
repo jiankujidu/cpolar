@@ -71,7 +71,7 @@ def download_cpolar(cpu):
         with open("cpolar.py", "wb") as f:
             f.write(res.content)
     if not os.path.exists("cpolar"):
-        res = requests.get("https://static.cpolar.com/downloads/releases/3.2.88.2/cpolar-stable-linux-" + cpu + ".zip")
+        res = requests.get("https://static.cpolar.com/downloads/releases/3.2.92/cpolar-stable-linux-" + cpu + ".zip")
         with open("cpolar.zip", "wb") as f:
             f.write(res.content)
         os.system("unzip cpolar.zip >/dev/null 2>&1&&rm -f cpolar.zip&&chmod +x cpolar&&" + app_path + " authtoken  " + authtoken + ">/dev/null 2>&1")
