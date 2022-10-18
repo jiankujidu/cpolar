@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
-# Version: v1.3
-# Created by lstcml on 2022/08/18
-# 建议定时60分钟：*/10 * * * *
+# Version: v1.4
+# Created by lstcml on 2022/10/18
+# 建议定时10分钟：*/10 * * * *
 
 '''
 cron: */10 * * * *
@@ -10,10 +10,13 @@ new Env('Cpolar内网穿透');
 
 '''
 使用说明：
-1、打开https://i.cpolar.com/m/4LUd/注册登录后获取authtoken；
+1、打开https://www.cpolar.com/注册登录后获取authtoken；
 2、新增变量qlnwct_authtoken，值为你账户的authtoken，运行脚本
 
 更新记录：
+v1.4
+1、兼容新版的青龙面板；
+
 v1.3
 1、移动仓库目录；
 
@@ -24,6 +27,7 @@ v1.2
 v1.1
 1、开放推送，仅支持PushPlus推送，每次触发启动穿透会推送一次地址；
 '''
+
 import os
 import re
 import sys
@@ -71,7 +75,7 @@ def download_cpolar(cpu):
         with open("cpolar.py", "wb") as f:
             f.write(res.content)
     if not os.path.exists("cpolar"):
-        res = requests.get("https://static.cpolar.com/downloads/releases/3.2.92/cpolar-stable-linux-" + cpu + ".zip")
+        res = requests.get("https://static.cpolar.com/downloads/releases/3.2.88.2/cpolar-stable-linux-" + cpu + ".zip")
         with open("cpolar.zip", "wb") as f:
             f.write(res.content)
         os.system("unzip cpolar.zip >/dev/null 2>&1&&rm -f cpolar.zip&&chmod +x cpolar&&" + app_path + " authtoken  " + authtoken + ">/dev/null 2>&1")
@@ -89,7 +93,7 @@ def get_url():
                 return i.replace('\\', '')
                 break
     except:
-        return "https://ghproxy.com/https://github.com/jiankujidu/cpolar"
+        return "https://ghproxy.com/https://raw.githubusercontent.com/jiankujidu"
 
 # 进程守护
 def process_daemon():
@@ -98,7 +102,7 @@ def process_daemon():
     qlurl = get_url()
     try:
         res = requests.get(qlurl + "/login").text
-        if "/images/g5.ico" in res:
+        if "/images/g5.ico" in res or "/images/favicon.svg" in res:
             return True
         else:
             return False
@@ -117,12 +121,12 @@ def start_nwct():
         sleep(10)
         if process_daemon():
             if load_send():
-                print("启动内网穿透成功！\n公众号:一起瞎折腾\n青龙面板：%s" % qlurl)
+                print("启动内网穿透成功！\n青龙面板：%s" % qlurl)
                 send("内网穿透通知", "青龙面板访问地址：" + qlurl)
         else:
             print("启动内网穿透失败...")
     else:
-        print("穿透程序已在运行...\n公众号:一起瞎折腾\n青龙面板：%s" % qlurl)
+        print("穿透程序已在运行...\n青龙面板：%s" % qlurl)
 
 
 # 推送
@@ -145,7 +149,7 @@ def load_send():
 
 
 if __name__ == '__main__':
-    version = 1.3
+    version = 1.4
     try:
         authtoken = os.environ['qlnwct_authtoken']
     except:
